@@ -9,22 +9,22 @@ export function useMoveRPC() {
   const [isLoading, setIsLoading] = useState(false);
   const { networkMode } = useCertificationStore();
 
-  type CreateCredentialResult = {
+  interface CreateCredentialResult {
     id: string;
     success: boolean;
     timestamp?: string;
     network?: string;
-  };
+  }
 
-  type GenerateProofResult = {
+  interface GenerateProofResult {
     proof: string;
     success: boolean;
-  };
+  }
 
-  type VerifyProofResult = {
+  interface VerifyProofResult {
     isValid: boolean;
     success: boolean;
-  };
+  }
 
   const createCredential = async (
     studentDID: string, 

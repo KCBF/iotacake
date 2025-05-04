@@ -18,11 +18,16 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Add a null alias for the native module that's failing to resolve
-      "../build/Release/index.node": path.resolve(__dirname, "./src/utils/empty-module.js"),
     },
   },
   optimizeDeps: {
     exclude: ['@iota/sdk-wasm'],
+  },
+  build: {
+    commonjsOptions: {
+      // Handle native modules for different environments
+      dynamicRequireTargets: [],
+      transformMixedEsModules: true,
+    },
   },
 }));

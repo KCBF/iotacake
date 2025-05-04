@@ -1,6 +1,8 @@
+
 import React, { createContext, useContext, useState } from 'react';
-import { useWallets, useConnectWallet, useDisconnectWallet, useCurrentAccount } from '@iota/dapp-kit';
+import { useWallets, useConnectWallet, useDisconnectWallet, useCurrentAccount, type WalletWithRequiredFeatures } from '@iota/dapp-kit';
 import { networks, defaultNetwork } from '@/config/networks';
+import type { Wallet } from '@iota/sdk';
 
 interface IotaWalletContextType {
   isConnected: boolean;
@@ -10,6 +12,7 @@ interface IotaWalletContextType {
   switchNetwork: (network: string) => void;
   address: string | null;
   balance: string;
+  wallet?: WalletWithRequiredFeatures;
 }
 
 const IotaWalletContext = createContext<IotaWalletContextType | undefined>(undefined);
@@ -57,7 +60,7 @@ export const IotaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   };
 
-  const value = {
+  const value: IotaWalletContextType = {
     isConnected,
     connect,
     disconnect,
@@ -65,6 +68,7 @@ export const IotaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     switchNetwork,
     address: currentAccount?.address || null,
     balance: '0', // We'll need to implement a proper balance fetching mechanism
+    wallet: wallets[0],
   };
 
   return (
@@ -80,4 +84,4 @@ export const useIotaWallet = () => {
     throw new Error('useIotaWallet must be used within an IotaWalletProvider');
   }
   return context;
-}; 
+};

@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useIotaWallet } from '@/context/IotaWalletContext';
 
 interface WalletConnectButtonProps {
   isConnected: boolean;
@@ -7,11 +9,14 @@ interface WalletConnectButtonProps {
   onDisconnect: () => Promise<void>;
 }
 
-export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
-  isConnected,
-  onConnect,
-  onDisconnect,
-}) => {
+export const WalletConnectButton: React.FC<WalletConnectButtonProps | Record<string, never>> = (props) => {
+  const iotaWallet = useIotaWallet();
+  
+  // Use passed props if available, otherwise use the context
+  const isConnected = 'isConnected' in props ? props.isConnected : iotaWallet.isConnected;
+  const onConnect = 'onConnect' in props ? props.onConnect : iotaWallet.connect;
+  const onDisconnect = 'onDisconnect' in props ? props.onDisconnect : iotaWallet.disconnect;
+
   const handleClick = async () => {
     try {
       if (isConnected) {
@@ -32,4 +37,4 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
       {isConnected ? 'Disconnect Wallet' : 'Connect Wallet'}
     </Button>
   );
-}; 
+};
